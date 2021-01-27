@@ -1,8 +1,8 @@
 id=Greenify4Magisk
 name=Greenify4Magisk
-version=v4.7.5 (BETA)
+version=4.7.5
 versionCode=73
 author=imal1
 description=A very simple module to make Greenify work as a privileged app, to achieve a faster hibernation performance, systemlessly.
 support=
-minMagisk=17000
+minMagisk=1600

@@ -20,11 +20,9 @@
 # Defines
 ##########################################################################################
 
-# NOTE: This part has to be adjusted to fit your own needs
-
 # Set to true if you need to enable Magic Mount
 # Most mods would like it to be enabled
-AUTOMOUNT=true
+SKIPMOUNT=false
 
 # Set to true if you need to load system.prop
 PROPFILE=false
@@ -34,30 +32,6 @@ POSTFSDATA=false
 
 # Set to true if you need late_start service script
 LATESTARTSERVICE=false
-
-# Unity Variables
-# Uncomment and change 'MINAPI' and 'MAXAPI' to the minimum and maxium android version for your mod (note that unity's minapi is 21 (lollipop) due to bash and magisk binaries)
-# Uncomment SEPOLICY if you have sepolicy patches in common/sepolicy.sh. Unity will take care of the rest
-# Uncomment DYNAMICOREO if you want libs installed to vendor for oreo and newer and system for anything older
-# Uncomment DYNAMICAPP if you want anything in $INSTALLER/system/app to be installed to the optimal app directory (/system/priv-app if it exists, /system/app otherwise)
-# Uncomment SYSOVERRIDE if you want the mod to always be installed to system (even on magisk)
-# Uncomment RAMDISK if you have ramdisk modifications. If you only want ramdisk patching as part of a conditional, just keep this commented out and set RAMDISK=true in that conditional.
-# Uncomment DEBUG if you want full debug logs (saved to SDCARD if in twrp, part of regular log if in magisk manager (user will need to save log after flashing)
-MINAPI=21
-MAXAPI=30
-#SEPOLICY=true
-#SYSOVERRIDE=true
-#DYNAMICOREO=true
-#DYNAMICAPP=true
-#RAMDISK=true
-#DEBUG=true
-
-# Custom Variables for Install AND Uninstall - Keep everything within this function
-unity_custom() {
-  :
-}
-
-# Custom Functions for Install AND Uninstall - You can put them here
 
 ##########################################################################################
 # Installation Message
@@ -99,7 +73,10 @@ REPLACE="
 # Permissions
 ##########################################################################################
 
-# NOTE: This part has to be adjusted to fit your own needs
+on_install() {
+  ui_print "- 正在释放文件"
+  unzip -o "$ZIPFILE" 'system/*' -d $MODPATH >&2
+}
 
 set_permissions() {
   # DEFAULT PERMISSIONS, DON'T REMOVE THEM
@@ -119,3 +96,14 @@ set_permissions() {
   # set_perm  <filename>                         <owner> <group> <permission> <contexts> (default: u:object_r:system_file:s0)
   # set_perm $UNITY$SYS/lib/libart.so 0 0 0644
 }
+
+##########################################################################################
+# Custom Functions
+##########################################################################################
+
+# This file (config.sh) will be sourced by the main flash script after util_functions.sh
+# If you need custom logic, please add them here as functions, and call these functions in
+# update-binary. Refrain from adding code directly into update-binary, as it will make it
+# difficult for you to migrate your modules to newer template versions.
+# Make update-binary as clean as possible, try to only do function calls in it.
+
